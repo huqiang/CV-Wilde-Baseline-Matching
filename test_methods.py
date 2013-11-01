@@ -9,6 +9,7 @@ import copy
 import numpy as np
 from numpy import arange,array,ones,linalg
 import heapq
+import math
 
 """
     This program to test combinations of feature detector, descriptor, and matchers
@@ -111,6 +112,7 @@ def match(detector_name, descriptor_name, matcher_name, image1_file, image2_file
     view[:, :]     = view[:, :]
     
     view2          = copy.copy(view)
+    view3          = copy.copy(view)
     
     
     diff_X         = []
@@ -158,8 +160,8 @@ def match(detector_name, descriptor_name, matcher_name, image1_file, image2_file
     H = np.array(H, dtype='float32')
 
     srcTri = np.array([srcTri])
-    print srcTri
-    print H
+    # print srcTri
+    # print H
     # srcTri[0] = (0,0)
     # srcTri[1] = (w1,0)
     # srcTri[2] = (w1,image1.rows)
@@ -168,19 +170,31 @@ def match(detector_name, descriptor_name, matcher_name, image1_file, image2_file
     height, width = view.shape[:2] 
     desTri = cv2.perspectiveTransform(srcTri, H)
 
-    print desTri
+
+    # print desTri
     # //-- Draw lines between the corners (the mapped object in the scene - image_2 )
     cv2.line(view2, (int(desTri[0][0][0]) + w1, int(desTri[0][0][1])), (int(desTri[0][1][0]) + w1, int(desTri[0][1][1])), (255,255,255), 4)
     cv2.line(view2, (int(desTri[0][1][0]) + w1, int(desTri[0][1][1])), (int(desTri[0][2][0]) + w1, int(desTri[0][2][1])), (255,255,255), 4)
     cv2.line(view2, (int(desTri[0][2][0]) + w1, int(desTri[0][2][1])), (int(desTri[0][3][0]) + w1, int(desTri[0][3][1])), (255,255,255), 4)
     cv2.line(view2, (int(desTri[0][3][0]) + w1, int(desTri[0][3][1])), (int(desTri[0][0][0]) + w1, int(desTri[0][0][1])), (255,255,255), 4)
 
-    # cv2.line(view, desTri[0] + (w1, 0), desTri[1] + Point2f(w1, 0), (255,255,255), 4)
-    # cv2.line(view, desTri[1] + (w1, 0), desTri[2] + Point2f(w1, 0), (255,255,255), 4)
-    # cv2.line(view, desTri[2] + (w1, 0), desTri[3] + Point2f(w1, 0), (255,255,255), 4)
-    # cv2.line(view, desTri[3] + (w1, 0), desTri[0] + Point2f(w1, 0), (255,255,255), 4)
- 
     cv2.imwrite(detector_name+"_"+descriptor_name+"_"+matcher_name+"_perspectiveTrans.jpg", view2)
+    # Perform perspectiveTransform on all source points;
+    dest_trans_points = cv2.perspectiveTransform(np.array([src_points], dtype='float32'), H)
+    final_src_points = []
+    final_des_points = []
+    #filter out miss matched points
+    for i in range(len(src_points)):
+        des_pt = dest_points[i]
+        trans_pt = dest_trans_points[0][i]
+        if math.hypot(des_pt[0] - trans_pt[0], des_pt[1] - trans_pt[1]) < 10:
+            final_src_points.append(src_points[i])
+            final_des_points.append(((int(trans_pt[0])), int(trans_pt[1])))
+            cv2.line(view3, (int(src_points[i][0]), int(src_points[i][1])), ((int(trans_pt[0]))+w1, int(trans_pt[1])), color, 3)
+            cv2.circle(view3, (int(src_points[i][0]), int(src_points[i][1])), 10,color, 3)
+            cv2.circle(view3, ((int(trans_pt[0]))+w1, int(trans_pt[1])), 10,color, 3)
+ 
+    cv2.imwrite(detector_name+"_"+descriptor_name+"_"+matcher_name+"_FinalMatches.jpg", view3)
     # cv2.imwrite(detector_name+"_labels.jpg", view2)
 #    cv2.imwrite(detector_name+"_labels_on_screen.jpg", image1)
 #    cv2.imwrite(detector_name+"_labels_on_pano.jpg", image2)
