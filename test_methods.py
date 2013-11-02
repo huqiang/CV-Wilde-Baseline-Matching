@@ -113,6 +113,7 @@ def match(detector_name, descriptor_name, matcher_name, image1_file, image2_file
     
     view2          = copy.copy(view)
     view3          = copy.copy(view)
+    view4          = copy.copy(view)
     
     
     diff_X         = []
@@ -193,8 +194,14 @@ def match(detector_name, descriptor_name, matcher_name, image1_file, image2_file
             cv2.line(view3, (int(src_points[i][0]), int(src_points[i][1])), ((int(trans_pt[0]))+w1, int(trans_pt[1])), color, 3)
             cv2.circle(view3, (int(src_points[i][0]), int(src_points[i][1])), 10,color, 3)
             cv2.circle(view3, ((int(trans_pt[0]))+w1, int(trans_pt[1])), 10,color, 3)
+            #Draw original points on dest image
+            cv2.line(view4, (int(src_points[i][0]), int(src_points[i][1])), ((int(des_pt[0]))+w1, int(des_pt[1])), color, 3)
+            cv2.circle(view4, (int(src_points[i][0]), int(src_points[i][1])), 10,color, 3)
+            cv2.circle(view4, ((int(des_pt[0]))+w1, int(des_pt[1])), 10,color, 3)
  
+    print "Final number of matches %d"% (len(final_src_points))
     cv2.imwrite(detector_name+"_"+descriptor_name+"_"+matcher_name+"_FinalMatches.jpg", view3)
+    cv2.imwrite(detector_name+"_"+descriptor_name+"_"+matcher_name+"_FinalMatches(orig).jpg", view4)
     # cv2.imwrite(detector_name+"_labels.jpg", view2)
 #    cv2.imwrite(detector_name+"_labels_on_screen.jpg", image1)
 #    cv2.imwrite(detector_name+"_labels_on_pano.jpg", image2)
