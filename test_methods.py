@@ -60,7 +60,9 @@ def match(detector_name, descriptor_name, matcher_name, image1_file, image2_file
     print "Time to match: ", str(t3  - t1)
 #     -- Step 4: Draw matches on image
 
+    print image1.shape
     h1, w1          = image1.shape[:2]
+    print w1, h1
     h2, w2          = image2.shape[:2]
     view1           = np.zeros((max(h1, h2), w1 + w2), np.uint8)
     view1[:h1, :w1] = image1
@@ -131,12 +133,25 @@ def match(detector_name, descriptor_name, matcher_name, image1_file, image2_file
     t3            = time.time()
     print "Time to perform geoverification: ", str(t3  - t1)
     
+    F, M  = cv2.findFundamentalMat(np.array(src_points, dtype='float32'), np.array(dest_points, dtype='float32'), cv.CV_FM_RANSAC, 3, 0.99)
+
+    src_pts = []
+    des_pts = []
+    for i in range(len(src_points)):
+        src_pts.append(src_points[i][0])
+        src_pts.append(src_points[i][1])
+        des_pts.append(dest_points[i][0])
+        des_pts.append(dest_points[i][1])
+
+    r, H1, H2 = cv2.stereoRectifyUncalibrated(np.array(src_pts, dtype='float32'), np.array(des_pts, dtype='float32'), F, image1.shape， threshold＝5)
+    # r, H1, H2 = cv2.stereoRectifyUncalibrated(np.array((1,2,2,3,3,4,4,5), dtype='float32'), np.array((1,2,2,3,3,4,4,5), dtype='float32'), F, (2,2))
+
     H             = np.array(H, dtype='float32')
     srcTri        = np.array([(0,0), (w1,0), (w1,h1), (0,h1)],dtype='float32')
     srcTri        = np.array([srcTri])
     
     height, width = view.shape[:2] 
-    desTri        = cv2.perspectiveTransform(srcTri, H)
+    desTri        = cv2.perspectiveTransform(srcTri, H2)
 
     # //-- Draw lines between the corners (the mapped object in the scene - image_2 )
     cv2.line(view2, (int(desTri[0][0][0]) + w1, int(desTri[0][0][1])), (int(desTri[0][1][0]) + w1, int(desTri[0][1][1])), (255,255,255), 4)
@@ -147,16 +162,18 @@ def match(detector_name, descriptor_name, matcher_name, image1_file, image2_file
     cv2.imwrite(detector_name+"_"+descriptor_name+"_"+matcher_name+"_perspectiveTrans.jpg", view2)
 
     # Perform perspectiveTransform on all source points;
-    dest_trans_points = cv2.perspectiveTransform(np.array([src_points], dtype='float32'), H)
+    dest_trans_points = cv2.perspectiveTransform(np.array([src_points], dtype='float32'), H2)
     final_src_points  = []
     final_des_points  = []
     #filter out miss matched points
     for i in range(len(src_points)):
         des_pt   = dest_points[i]
         trans_pt = dest_trans_points[0][i]
-        if math.hypot(des_pt[0] - trans_pt[0], des_pt[1] - trans_pt[1]) < 10:
+        if math.hypot(des_pt[0] - trans_pt[0], des_pt[1] - trans_pt[1]) < 100:
             final_src_points.append(src_points[i])
             final_des_points.append(((int(trans_pt[0])), int(trans_pt[1])))
+
+            color = tuple([np.random.randint(0, 255) for _ in xrange(3)])
 
             cv2.line(view3, (int(src_points[i][0]), int(src_points[i][1])), ((int(trans_pt[0]))+w1, int(trans_pt[1])), color, 3)
             cv2.circle(view3, (int(src_points[i][0]), int(src_points[i][1])), 10,color, 3)
