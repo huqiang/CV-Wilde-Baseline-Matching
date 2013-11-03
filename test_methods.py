@@ -143,7 +143,7 @@ def match(detector_name, descriptor_name, matcher_name, image1_file, image2_file
         des_pts.append(dest_points[i][0])
         des_pts.append(dest_points[i][1])
 
-    r, H1, H2 = cv2.stereoRectifyUncalibrated(np.array(src_pts, dtype='float32'), np.array(des_pts, dtype='float32'), F, image1.shape， threshold＝5)
+    r, H1, H2 = cv2.stereoRectifyUncalibrated(np.array(src_pts, dtype='float32'), np.array(des_pts, dtype='float32'), F, image1.shape,threshold=5)
     # r, H1, H2 = cv2.stereoRectifyUncalibrated(np.array((1,2,2,3,3,4,4,5), dtype='float32'), np.array((1,2,2,3,3,4,4,5), dtype='float32'), F, (2,2))
 
     H             = np.array(H, dtype='float32')
