@@ -1,0 +1,60 @@
+<h2>
+<a name="cs4243-project-sem1-ay1314" class="anchor" href="#cs4243-project-sem1-ay1314"><span class="octicon octicon-link"></span></a>CS4243 Project Sem1 AY1314</h2>
+
+<h3>
+<a name="wide-baseline-matching" class="anchor" href="#wide-baseline-matching"><span class="octicon octicon-link"></span></a>wide baseline matching</h3>
+
+<p>by:  </p>
+
+<table>
+<thead><tr>
+<th>Name</th>
+<th>Matric Number</th>
+</tr></thead>
+<tbody>
+<tr>
+<td>Chua Cai Jun</td>
+<td>A0087796A</td>
+</tr>
+<tr>
+<td>Hu Qiang</td>
+<td>A0077857J</td>
+</tr>
+<tr>
+<td>Li Yin</td>
+<td>A0085686L</td>
+</tr>
+<tr>
+<td>Liu Yang</td>
+<td>A0077978B</td>
+</tr>
+</tbody>
+</table><h4>
+<a name="development-environment" class="anchor" href="#development-environment"><span class="octicon octicon-link"></span></a>Development Environment</h4>
+
+<p>OpenCV Version: 2.4.6.1(Mac OS X)   2.4.6.0(Windows)<br>
+Python Version: 2.7.*  </p>
+
+<h4>
+<a name="running-command-on-linux-enviroment" class="anchor" href="#running-command-on-linux-enviroment"><span class="octicon octicon-link"></span></a>Running command on Linux Enviroment</h4>
+
+<div class="highlight highlight-bash"><pre>./widebaseline.py QUERY_IMAGE TRAINED_IMAGE
+python widebaseline.py QUERY_IMAGE TRAINED_IMAGE
+</pre></div>
+
+<h4>
+<a name="note" class="anchor" href="#note"><span class="octicon octicon-link"></span></a>NOTE:</h4>
+
+<ul>
+<li>Ths program is not tested on Python3</li>
+<li>SIFT feature detector cannot be used in Windows Platform</li>
+<li>Dont use same image as both QUERY_IMAGE and TRAINED_IMAGE<br>
+#### General Idea:<br>
+</li>
+<li>Detectect keypoints</li>
+<li>Extract descriptors</li>
+<li>Find matches</li>
+<li>Keep good matches</li>
+<li>Perform geo-verification using RANSAC</li>
+<li>Further filter out no-so-good matchs based on found foundamental matrix or homography</li>
+</ul>
