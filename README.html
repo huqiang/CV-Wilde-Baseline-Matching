@@ -49,12 +49,15 @@ python widebaseline.py QUERY_IMAGE TRAINED_IMAGE
 <li>Ths program is not tested on Python3</li>
 <li>SIFT feature detector cannot be used in Windows Platform</li>
 <li>Dont use same image as both QUERY_IMAGE and TRAINED_IMAGE<br>
-#### General Idea:<br>
 </li>
+</ul><h4>
+<a name="general-idea" class="anchor" href="#general-idea"><span class="octicon octicon-link"></span></a>General Idea:</h4>
+
+<ol>
 <li>Detectect keypoints</li>
 <li>Extract descriptors</li>
 <li>Find matches</li>
 <li>Keep good matches</li>
 <li>Perform geo-verification using RANSAC</li>
 <li>Further filter out no-so-good matchs based on found foundamental matrix or homography</li>
-</ul>
+</ol>

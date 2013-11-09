@@ -17,11 +17,13 @@ Python Version: 2.7.*
 ```bash
 ./widebaseline.py QUERY_IMAGE TRAINED_IMAGE
 python widebaseline.py QUERY_IMAGE TRAINED_IMAGE
-```
+```  
+
 #### NOTE:  
 + Ths program is not tested on Python3
 + SIFT feature detector cannot be used in Windows Platform
 + Dont use same image as both QUERY_IMAGE and TRAINED_IMAGE  
+
 #### General Idea:  
 1. Detectect keypoints
 1. Extract descriptors
