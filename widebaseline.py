@@ -17,23 +17,23 @@ import math
 """
 
 def isGoodQuad(pts):
-    hull = cv2.convexHull(pts, 0 ,1)#2nd Parameter: True= clockwise, 3rd Paramter: True to return points, False to return index 
+    hull = cv2.convexHull(pts, returnPoints=False) 
     print hull
+        
     if (len(hull)<4):
         print "concave quad"
         return False #when the quad is concave, there are less than 4 points to form the convex hull
-    falseCount = 0
+
+    startIndex = 0
     for m in range(4):
-        if (pts[m][0]!=hull[3-m][0][0] or pts[m][1]!=hull[3-m][0][1]):
-            falseCount += 1
-            break
+        if (hull[m]==0):
+            startIndex = m
+    print startIndex
+
     for m in range(4):
-        if (pts[m][0]!=hull[m][0][0] or pts[m][1]!=hull[m][0][1]):
-            falseCount += 1
-            break
-    if(falseCount == 2):
-        print "false"
-        return False
+        if(hull[(startIndex+m)%4]!=m):
+            print "false"
+            return False
     return True
 
 def match(detector_name, descriptor_name, matcher_name, image1_file, image2_file):
@@ -292,11 +292,11 @@ def match(detector_name, descriptor_name, matcher_name, image1_file, image2_file
     
  
 if __name__ == '__main__':
-    match("ORB", "ORB", "BruteForce", sys.argv[1], sys.argv[2])
+    #match("ORB", "ORB", "BruteForce", sys.argv[1], sys.argv[2])
     # match("FAST", "ORB", "BruteForce", sys.argv[1], sys.argv[2])
-    match("BRISK", "BRISK", "BruteForce", sys.argv[1], sys.argv[2])
-    match("SURF", "SIFT", "FlannBased", sys.argv[1], sys.argv[2])
+    #match("BRISK", "BRISK", "BruteForce", sys.argv[1], sys.argv[2])
+    #match("SURF", "SIFT", "FlannBased", sys.argv[1], sys.argv[2])
     match("SURF", "SIFT", "BruteForce", sys.argv[1], sys.argv[2])
-    match("SIFT", "SIFT", "FlannBased", sys.argv[1], sys.argv[2])
+    #match("SIFT", "SIFT", "FlannBased", sys.argv[1], sys.argv[2])
     # match("SURF", "SIFT", "BruteForce-Hamming", sys.argv[1], sys.argv[2])
     #     match("BRISK", "BRISK", "FlannBased", sys.argv[1], sys.argv[2])
