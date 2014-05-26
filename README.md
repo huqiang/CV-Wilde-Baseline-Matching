@@ -1,13 +1,5 @@
-## CS4243 Project Sem1 AY1314  
-### wide baseline matching
-by:  
 
-Name 		| Matric Number
---- 		| ---
-Chua Cai Jun| A0087796A
-Hu Qiang 	| A0077857J
-Li Yin 		| A0085686L
-Liu Yang 	| A0077978B  
+### wide baseline matching
 
 #### Development Environment
 OpenCV Version: 2.4.6.1(Mac OS X)   2.4.6.0(Windows)  
